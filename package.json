@@ -1,13 +1,11 @@
 {
   "name": "element-app-hello-world",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "pkg": "rimraf dist && ng build && concat-glob-cli -f dist/**/*.js -o dist/element-app-hello-world.js && copyfiles -u 1 src/assets/*.ico dist && rimraf dist/element-app-hello-world && npm pack"
+    "build": "rimraf dist && ng build -c production && concat-glob-cli -f dist/**/*.js -o dist/element-app-hello-world.js && copyfiles -u 1 src/assets/* dist && rimraf dist/element-app-hello-world && copyfiles package.json ./dist && cd ./dist && bestzip ../element-app-hello-world.zip ./*"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.18",
@@ -23,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^20.3.17",
     "@angular/router": "^20.3.17",
     "@types/jasmine": "~5.1.0",
+    "bestzip": "^2.2.1",
     "concat-glob-cli": "^0.1.0",
     "copyfiles": "^2.4.1",
     "jasmine-core": "~5.1.0",
@@ -31,20 +30,19 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "rimraf": "^5.0.7",
+    "rimraf": "^5.0.10",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "typescript": "~5.8.3",
-    "zone.js": "~0.15.1"
+    "typescript": "~5.8.3"
   },
   "phantom-desk": {
     "name": "Element App Hello World",
     "type": "element",
-    "author": "Chi Yang",
-    "email": "chiyang1118@gmail.com",
+    "author": "Evan Lin",
+    "email": "evanlin@besta.com.tw",
     "description": "This is an example app",
-    "element": "dist/element-app-hello-world.js",
-    "icon": "dist/assets/favicon.ico",
+    "element": "element-app-hello-world.js",
+    "icon": "assets/favicon.ico",
     "tagName": "element-app-hello-world",
     "isModule": true,
     "scopes": [
