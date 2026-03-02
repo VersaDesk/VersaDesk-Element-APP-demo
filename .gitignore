@@ -8,6 +8,7 @@
 .angular
 .vscode
 /.vscode
+*.zip
 
 # Node
 /node_modules
