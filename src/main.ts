@@ -25,11 +25,25 @@ import { createApplication } from "@angular/platform-browser";
 import { appConfig } from './app/app.config';
 import {createCustomElement} from '@angular/elements';
 import { AppComponent } from './app/app.component';
+import { ELEMENT_PACKAGE_NAME, elementAsset } from './app/element.config';
+
+function applyElementFavicon(): void {
+  const faviconPath = elementAsset('favicon.ico');
+  let favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/x-icon';
+    document.head.appendChild(favicon);
+  }
+  favicon.href = faviconPath;
+}
 
 (async () => {
+  applyElementFavicon();
   const app = await createApplication(appConfig);
   const elem = createCustomElement(AppComponent, {injector: app.injector});
-  if (!customElements.get('element-app-hello-world')) {
-    customElements.define('element-app-hello-world', elem);
+  if (!customElements.get(ELEMENT_PACKAGE_NAME)) {
+    customElements.define(ELEMENT_PACKAGE_NAME, elem);
   }
 })().catch(err => console.log(err));

@@ -1,44 +1,51 @@
-# CHANGELOG
+﻿# 變更紀錄
 
 ## 2026-03-02
 
-### Angular 升級紀錄
-- 目標: 將專案 Angular 升級到 v20。
-- 發現: `package.json` 原本顯示 `19.x`，但實際安裝版本為 `17.3.x`（`ng version`）。
-- 依 Angular 升級限制，採逐版升級:
-1. `17 -> 18` (`ng update @angular/core@18 @angular/cli@18 --force --allow-dirty`)
-2. `18 -> 19` (`ng update @angular/core@19 @angular/cli@19 --force --allow-dirty`)
-3. `19 -> 20` (`ng update @angular/core@20 @angular/cli@20 --force --allow-dirty`)
-- 升級後主要版本:
+### 新增
+- 在 `src/app/element.config.ts` 新增 Element 共用設定與資產路徑工具：
+  - `ELEMENT_PACKAGE_NAME`
+  - `ELEMENT_ASSETS_BASE_PATH`
+  - `elementAsset(path)`
+
+### 調整
+- `src/app/app.component.html` 的 logo 改為 `[src]="asset('versadesk_logo.png')"`，不再寫死路徑。
+- `src/app/app.component.ts` 改為使用 `ELEMENT_PACKAGE_NAME`，套用於：
+  - 初始標題值
+  - 標題切換邏輯
+  - 初始化 log 訊息
+- `src/main.ts` 的 custom element 註冊改為使用 `ELEMENT_PACKAGE_NAME`。
+- `src/main.ts` 新增動態 favicon 設定，使用 `elementAsset('favicon.ico')`。
+- `src/app/app.component.spec.ts` 改為使用 `ELEMENT_PACKAGE_NAME`，移除硬編碼名稱字串。
+
+### 文件
+- 重寫 `README.md`，補上專案實際使用方式與資產路徑規範。
+
+### 驗證
+- `npm run build` 已成功。
+- 既有警告仍存在：
+  - `src/app/app.component.css` 超過 `anyComponentStyle` warning budget。
+
+---
+
+## 2026-03-02（稍早）
+
+### 升級
+- Angular 套件升級至 v20：
   - `@angular/core`: `20.3.17`
   - `@angular/cli`: `20.3.18`
   - `@angular-devkit/build-angular`: `20.3.18`
 
-### Angular Migration 造成的設定變更
-- `tsconfig.json`
-  - `moduleResolution` 更新為 `"bundler"`（CLI migration）。
-- `angular.json`
-  - 新增/更新 schematics 預設設定（CLI migration）。
+### 遷移
+- `tsconfig.json`：
+  - `moduleResolution` 調整為 `"bundler"`
+- `angular.json`：
+  - 套用 CLI migration 與專案遷移預設調整。
+- 套用 zoneless 設定：
+  - `src/app/app.config.ts` 使用 `provideZonelessChangeDetection()`
+  - 移除 build/test 的 `zone.js` polyfills
+  - 移除 `package.json` 中的 `zone.js` 相依套件
 
-### Zoneless 遷移紀錄
-- 目標: 將專案改為使用 zoneless change detection。
-- 變更內容:
-1. `src/app/app.config.ts`
-   - 啟用 `provideZonelessChangeDetection()`。
-   - 移除未使用的 `NgZone` 設定與註解中的舊 provider。
-2. `angular.json`
-   - `build.options.polyfills` 由 `["zone.js"]` 改為 `[]`。
-   - `test.options.polyfills` 由 `["zone.js", "zone.js/testing"]` 改為 `[]`。
-3. `package.json`
-   - 移除 `zone.js` 依賴。
-4. `package-lock.json`
-   - 依 `npm install` 同步更新。
-
-### 驗證結果
+### 驗證
 - `ng version` 顯示 Angular CLI `20.3.18`、Angular `20.3.17`。
-- `npm run build` 驗證成功。
-- 既有警告仍存在:
-  - `src/app/app.component.css` 超過 `anyComponentStyle` warning budget（2kb）。
-
-### 其他備註
-- `src/main.ts` 仍有提及 `zone.js` 的說明註解（僅註解，不影響執行）。
+- `npm run build` 成功，僅有樣式 budget 警告。
