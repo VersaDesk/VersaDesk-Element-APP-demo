@@ -4,8 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "watch": "ng build --watch --configuration development",
-    "build": "rimraf dist && ng build -c production && concat-glob-cli -f dist/**/*.js -o dist/element-app-hello-world.js && copyfiles -u 1 src/assets/* dist && rimraf dist/element-app-hello-world && copyfiles package.json ./dist && cd ./dist && bestzip ../element-app-hello-world.zip ./*"
+    "clean": "rimraf dist",
+    "build:ng": "ng build -c production",
+    "build:bundle": "concat-glob-cli -f dist/**/*.js -o dist/element-app-hello-world.js",
+    "build:copy": "copyfiles -u 1 src/assets/* dist && copyfiles package.json ./dist && rimraf dist/element-app-hello-world",
+    "build:zip": "cd ./dist && bestzip ../element-app-hello-world.zip ./*",
+    "build": "npm run clean && npm run build:ng && npm run build:bundle && npm run build:copy && npm run build:zip"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.18",
